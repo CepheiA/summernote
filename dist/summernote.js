@@ -5,13 +5,13 @@
  * Copyright 2013- Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license.
  *
- * Date: 2018-11-24T12:13Z
+ * Date: 2019-01-16T01:35Z
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('jquery')) :
   typeof define === 'function' && define.amd ? define(['jquery'], factory) :
-  (factory(global.jQuery));
-}(this, (function ($$1) { 'use strict';
+  (global = global || self, factory(global.jQuery));
+}(this, function ($$1) { 'use strict';
 
   $$1 = $$1 && $$1.hasOwnProperty('default') ? $$1['default'] : $$1;
 
@@ -714,7 +714,7 @@
       jqueryVersion: parseFloat($$1.fn.jquery),
       isSupportAmd: isSupportAmd,
       isSupportTouch: isSupportTouch,
-      hasCodeMirror: hasCodeMirror,
+      hasCodeMirror: false,
       isFontInstalled: isFontInstalled,
       isW3CRangeSupport: !!document.createRange,
       inputEventName: inputEventName
@@ -4743,17 +4743,6 @@
       return Dropzone;
   }());
 
-  var CodeMirror;
-  if (env.hasCodeMirror) {
-      if (env.isSupportAmd) {
-          require(['codemirror'], function (cm) {
-              CodeMirror = cm;
-          });
-      }
-      else {
-          CodeMirror = window.CodeMirror;
-      }
-  }
   /**
    * @class Codeview
    */
@@ -4800,24 +4789,7 @@
           this.$editor.addClass('codeview');
           this.$codable.focus();
           // activate CodeMirror as codable
-          if (env.hasCodeMirror) {
-              var cmEditor_1 = CodeMirror.fromTextArea(this.$codable[0], this.options.codemirror);
-              // CodeMirror TernServer
-              if (this.options.codemirror.tern) {
-                  var server_1 = new CodeMirror.TernServer(this.options.codemirror.tern);
-                  cmEditor_1.ternServer = server_1;
-                  cmEditor_1.on('cursorActivity', function (cm) {
-                      server_1.updateArgHints(cm);
-                  });
-              }
-              cmEditor_1.on('blur', function (event) {
-                  _this.context.triggerEvent('blur.codeview', cmEditor_1.getValue(), event);
-              });
-              // CodeMirror hasn't Padding.
-              cmEditor_1.setSize(null, this.$editable.outerHeight());
-              this.$codable.data('cmEditor', cmEditor_1);
-          }
-          else {
+          {
               this.$codable.on('blur', function (event) {
                   _this.context.triggerEvent('blur.codeview', _this.$codable.val(), event);
               });
@@ -4827,12 +4799,6 @@
        * deactivate code view
        */
       CodeView.prototype.deactivate = function () {
-          // deactivate CodeMirror as codable
-          if (env.hasCodeMirror) {
-              var cmEditor = this.$codable.data('cmEditor');
-              this.$codable.val(cmEditor.getValue());
-              cmEditor.toTextArea();
-          }
           var value = dom.value(this.$codable, this.options.prettifyHtml) || dom.emptyPara;
           var isChange = this.$editable.html() !== value;
           this.$editable.html(value);
@@ -7566,5 +7532,5 @@
       }
   });
 
-})));
+}));
 //# sourceMappingURL=summernote.js.map

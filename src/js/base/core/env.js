@@ -100,7 +100,7 @@ export default {
   jqueryVersion: parseFloat($.fn.jquery),
   isSupportAmd,
   isSupportTouch,
-  hasCodeMirror,
+  hasCodeMirror: false,
   isFontInstalled,
   isW3CRangeSupport: !!document.createRange,
   inputEventName
